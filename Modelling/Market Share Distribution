@@ -1,0 +1,17 @@
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider
+import numpy as np
+
+#Create a random arrangment of market shares
+#Normalize them towards 100%
+#Each number refers to the % of market share a company has of one product
+
+#Hirarchy = Macro Economy (Country) > Micro Economy (Industry) > Product > Company
+#Here the distribution of marketshare of Product for each company is determined
+
+
+company_distribution_seed = np.random.rand(100, 1)
+company_distribution_seed_sum = sum(company_distribution_seed)
+company_distribution_fraction = company_distribution_seed/company_distribution_seed_sum
+
+print(company_distribution_fraction)
