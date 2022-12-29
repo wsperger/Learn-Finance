@@ -1,8 +1,12 @@
 import sqlite3
 import numpy as np
 import sqlite3
+import Initialize_Goverment_Policies
 
-def generate_market_curves():
+def generate_market_curves(num_days, macro, micro, product, id_ma, id_mi, id_po, Temp_Micro_Value, Temp_Product_Value, macro_ampl_slider, macro_growth_factor_slider, macro_freq_slider, Micro_Amplitude_slider, Micro_Growth_Factor_slider, Micro_Frequency_slider, Product_Amplitude_slider, Product_Growth_Factor_slider, Product_Frequency_slider):
+    # function code goes here
+
+
     # Connect to the database
     conn = sqlite3.connect('Financials.db')
 
@@ -47,9 +51,17 @@ def generate_market_curves():
     Product_Growth_Factor_slider = 0.5
     Product_Frequency_slider = 0.2
 
+    Initialize_Goverment_Policies.init_Goverment_Policies('Financials.db', macro)
+
+
     #Calculations
     def Macro_Curve(t, macro_ampl_slider, macro_freq_slider, macro_growth_factor_slider):
         return (macro_ampl_slider * np.sin(macro_freq_slider * t))+(np.sqrt(t*macro_growth_factor_slider))
+
+    def Macro_Curve_Derivative(t, macro_ampl_slider, macro_freq_slider, macro_growth_factor_slider):
+        curve = (macro_ampl_slider * np.sin(macro_freq_slider * t)) + (np.sqrt(t * macro_growth_factor_slider))
+        derivative = np.gradient(curve, t)
+        return derivative
 
     def Micro_Curve(t, Micro_Amplitude_slider, Micro_Frequency_slider, Micro_Growth_Factor_slider, Temp_Micro_Value, macro_ampl_slider, macro_freq_slider, macro_growth_factor_slider):
         return ((((macro_ampl_slider * np.sin(macro_freq_slider * t))+(np.sqrt(t*macro_growth_factor_slider))+((Micro_Amplitude_slider * np.sin(2*Micro_Frequency_slider * t))+(np.sqrt(t*Micro_Growth_Factor_slider))))/2) * Temp_Micro_Value)
@@ -58,22 +70,24 @@ def generate_market_curves():
         return ((((((macro_ampl_slider * np.sin(macro_freq_slider * t))+(np.sqrt(t*macro_growth_factor_slider))+((Micro_Amplitude_slider * np.sin(2*Micro_Frequency_slider * t))+(np.sqrt(t*Micro_Growth_Factor_slider))))/2) * Temp_Micro_Value)+((Product_Amplitude_slider * np.sin(2*Product_Frequency_slider * t))+(np.sqrt(t*Product_Growth_Factor_slider))))/3)
 
     # Create the table
-    cursor.execute("CREATE TABLE IF NOT EXISTS macro (id TEXT, y_values REAL, x_values REAL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS macro (id TEXT, y_values REAL, y_value_derivative, x_values REAL)")
     cursor.execute("CREATE TABLE IF NOT EXISTS micro (id TEXT, y_values REAL, x_values REAL)")
     cursor.execute("CREATE TABLE IF NOT EXISTS product (id TEXT, y_values REAL, x_values REAL)")
 
     for ma in macro:
         y_values = Macro_Curve(t, macro_ampl_slider, macro_freq_slider, macro_growth_factor_slider)
+        y_value_derivative = Macro_Curve_Derivative(t, macro_ampl_slider, macro_freq_slider, macro_growth_factor_slider)
         macro_id = "macro " + ma + str(id_ma)
         x_values = t
 
+
         # Iterate through the y_values and x_values arrays
-        for y, x in zip(y_values, x_values):
+        for y, x, yd in zip(y_values, x_values, y_value_derivative):
             # Convert the x value to a string
             x_string = str(x)
 
             # Insert a row into the table
-            cursor.execute("INSERT INTO macro (id, y_values, x_values) VALUES (?, ?, ?)", (macro_id, y, x_string))
+            cursor.execute("INSERT INTO macro (id, y_values, x_values, y_value_derivative) VALUES (?, ?, ?, ?)", (macro_id, y, x_string, yd))
 
         # Commit the changes
         conn.commit()

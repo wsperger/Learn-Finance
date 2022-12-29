@@ -24,17 +24,17 @@ def reset_tables(db_name):
                               )''')
 
             con.execute('''CREATE TABLE IF NOT EXISTS income_statement (
-                                id TEXT PRIMARY KEY,
-                                date integer,
-                                revenue REAL NOT NULL,
-                                cost_of_goods_sold REAL NOT NULL,
-                                gross_profit REAL NOT NULL,
-                                selling_and_administrative_expenses REAL NOT NULL,
-                                operating_income REAL NOT NULL,
-                                other_income_expense REAL NOT NULL,
-                                net_income REAL NOT NULL
-                                )''')
-
+                                            id TEXT,
+                                            date integer,
+                                            revenue REAL NOT NULL,
+                                            cost_of_goods_sold REAL NOT NULL,
+                                            gross_profit REAL NOT NULL,
+                                            selling_and_administrative_expenses REAL NOT NULL,
+                                            operating_income REAL NOT NULL,
+                                            other_income_expense REAL NOT NULL,
+                                            net_income REAL NOT NULL,
+                                            PRIMARY KEY (id, date)
+                                            )''')
         con.execute('''CREATE TABLE IF NOT EXISTS balance_sheet (
                         id integer,
                         date integer,
@@ -50,10 +50,12 @@ def reset_tables(db_name):
                         common_stock REAL NOT NULL,
                         retained_earnings REAL NOT NULL,
                         total_assets REAL NOT NULL,
-                        total_liabilities_equity REAL NOT NULL
+                        total_liabilities_equity REAL NOT NULL,
+                        FOREIGN KEY (id) REFERENCES Company_Allocation(id)
+                        PRIMARY KEY (id, date)
                         )''')
         con.execute('''CREATE TABLE IF NOT EXISTS pnl (
-                        id TEXT PRIMARY KEY,
+                        id TEXT,
                         date integer,
                         revenue REAL NOT NULL,
                         cost_of_goods_sold REAL NOT NULL,
@@ -61,16 +63,11 @@ def reset_tables(db_name):
                         selling_and_administrative_expenses REAL NOT NULL,
                         operating_income REAL NOT NULL,
                         other_income_expense REAL NOT NULL,
-                        net_income REAL NOT NULL
+                        net_income REAL NOT NULL,
+                        FOREIGN KEY (id) REFERENCES Company_Allocation(id)
+                        PRIMARY KEY (id, date)
                         )''')
-        con.execute('''CREATE TABLE cost_of_goods_sold (
-                               id TEXT PRIMARY KEY,
-                               date integer,
-                               product_name text,
-                               quantity integer,
-                               unit_cost real,
-                               total_cost real
-                               )''')
+
         con.execute("""
                     CREATE TABLE Goverment_Policies (
                         Macro TEXT,
