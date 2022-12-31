@@ -23,6 +23,18 @@ def reset_tables(db_name):
                               product TEXT
                               )''')
 
+            con.execute('''CREATE TABLE IF NOT EXISTS insolvency_status (
+                            id TEXT,
+                            is_insolvent INTEGER NOT NULL,
+                            date INTEGER NOT NULL,
+                            PRIMARY KEY (id, date)
+                            )''')
+
+            cursor.execute(
+                "CREATE TABLE IF NOT EXISTS macro (id TEXT, y_values REAL, y_value_derivative, x_values REAL)")
+            cursor.execute("CREATE TABLE IF NOT EXISTS micro (id TEXT, y_values REAL, x_values REAL)")
+            cursor.execute("CREATE TABLE IF NOT EXISTS product (id TEXT, y_values REAL, x_values REAL)")
+
             con.execute('''CREATE TABLE IF NOT EXISTS income_statement (
                                             id TEXT,
                                             date integer,
@@ -67,6 +79,18 @@ def reset_tables(db_name):
                         FOREIGN KEY (id) REFERENCES Company_Allocation(id)
                         PRIMARY KEY (id, date)
                         )''')
+        cursor.execute('''
+          CREATE TABLE loans (
+            id INTEGER PRIMARY KEY,
+            company_id INTEGER NOT NULL,
+            amount REAL NOT NULL,
+            term INTEGER NOT NULL,
+            interest_rate REAL NOT NULL,
+            total_interest_expense REAL NOT NULL,
+            date INTEGER NOT NULL,
+            FOREIGN KEY (company_id) REFERENCES companies(id)
+          );
+        ''')
 
         con.execute("""
                     CREATE TABLE Goverment_Policies (

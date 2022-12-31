@@ -16,15 +16,15 @@ import random
 #industries = ["Technology", "Finance", "Retail"]
 #products = ["Computer", "Phone", "Tablet"]
 
-countries = ["eda"]
-industries = ["Technology"]
-products = ["Computer"]
+countries = ["eda", "asdasd", "dasda"]
+industries = ["Technology", "Farming", "Cars"]
+products = ["Computer", "Tractors", "Car"]
 
 
 # Declare variables with random values
 
 #For how many days should the simulation run
-num_days = 324
+num_days = 3
 #this carries the num_days values, but it is converted to an array so it can be ingested by the financial calculation functions further down the line
 a = []
 
@@ -37,7 +37,7 @@ micro = industries
 product = products
 
 #This determines how many companies are established per product
-companies_per_product = 1
+companies_per_product = 7
 
 #This block of variables is used to generate the macro, micro and product curves. They determine the overall demand for all products over time
 id_ma = random.randint(1, 100)

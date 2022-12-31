@@ -35,7 +35,7 @@ def calculate_balance_sheet(balance_sheet_date):
         # Fetch the results
         inc_sta_results = cursor.fetchone()
 
-        print(inc_sta_results)
+        #print(inc_sta_results)
 
         inc_sta_id, inc_sta_date, inc_sta_revenue, inc_sta_cost_of_goods_sold, inc_sta_gross_profit, inc_sta_selling_and_administrative_expenses, inc_sta_operating_income, inc_sta_other_income_expense, inc_sta_net_income = inc_sta_results
 
@@ -46,7 +46,7 @@ def calculate_balance_sheet(balance_sheet_date):
         # Fetch the results
         pnl_results = cursor.fetchone()
 
-        print(pnl_results)
+        #print(pnl_results)
 
         pnl_id, pnl_date, pnl_revenue, pnl_cost_of_goods_sold, pnl_gross_profit, pnl_selling_and_administrative_expenses, pnl_operating_income, pnl_other_income_expense, pnl_net_income = pnl_results
 
